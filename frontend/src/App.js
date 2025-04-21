@@ -6,7 +6,7 @@ import StudentList from './components/StudentList.jsx';
 import Toast from './components/Toast.jsx';
 import './App.css';
 
-const API = 'http://localhost:3000';
+const API = 'https://assigment-2.onrender.com';
 
 const App = () => {
   const [students, setStudents] = useState([]);
