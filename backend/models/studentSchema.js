@@ -8,8 +8,7 @@ const studentSchema = new mongoose.Schema({
   dob: { type: Date, required: true },
   department: { type: String, required: true },
   enrollmentYear: { type: Number, required: true },
-  isActive: { type: Boolean, default: true },
-  profilePhoto: { type: String },  // Cloudinary URL (optional)
+  isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Student', studentSchema);
