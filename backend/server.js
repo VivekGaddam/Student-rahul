@@ -1,9 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const multer = require('multer');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('./cloudinary');
+
 const Student = require('./models/studentSchema'); // updated model
 
 const app = express();
@@ -11,25 +9,14 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://vivekgaddam2005:saritharam02@cluster0.6hmdh4n.mongodb.net/student_db?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect('mongodb+srv://gudipallylokeshreddy:Glokesh09@cluster0.lbbss6z.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(() => console.log('✅ MongoDB connected'))
 .catch((err) => console.error('❌ MongoDB error:', err));
 
-// Cloudinary Storage config
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'student_uploads',
-    allowed_formats: ['jpg', 'jpeg', 'png'],
-  },
-});
 
-const upload = multer({ storage });
-
-// Get all students
 app.get('/students', async (req, res) => {
   try {
     const students = await Student.find();
@@ -50,8 +37,8 @@ app.get('/students/:id', async (req, res) => {
   }
 });
 
-// Add new student with image upload
-app.post('/students', upload.single('profilePhoto'), async (req, res) => {
+// Add new student (no image)
+app.post('/students', async (req, res) => {
   try {
     const {
       studentId,
@@ -63,8 +50,6 @@ app.post('/students', upload.single('profilePhoto'), async (req, res) => {
       enrollmentYear,
       isActive,
     } = req.body;
-
-    const profilePhoto = req.file ? req.file.path : null;
 
     const student = new Student({
       studentId,
@@ -75,7 +60,6 @@ app.post('/students', upload.single('profilePhoto'), async (req, res) => {
       department,
       enrollmentYear,
       isActive,
-      profilePhoto,
     });
 
     await student.save();
@@ -85,8 +69,8 @@ app.post('/students', upload.single('profilePhoto'), async (req, res) => {
   }
 });
 
-// Update student info
-app.put('/students/:id', upload.single('profilePhoto'), async (req, res) => {
+// Update student info (no image)
+app.put('/students/:id', async (req, res) => {
   try {
     const {
       studentId,
@@ -98,8 +82,6 @@ app.put('/students/:id', upload.single('profilePhoto'), async (req, res) => {
       enrollmentYear,
       isActive,
     } = req.body;
-
-    const profilePhoto = req.file ? req.file.path : undefined;
 
     const updatedData = {
       studentId,
@@ -111,7 +93,6 @@ app.put('/students/:id', upload.single('profilePhoto'), async (req, res) => {
       enrollmentYear,
       isActive,
     };
-    if (profilePhoto) updatedData.profilePhoto = profilePhoto;
 
     const updatedStudent = await Student.findByIdAndUpdate(
       req.params.id,
@@ -127,6 +108,7 @@ app.put('/students/:id', upload.single('profilePhoto'), async (req, res) => {
   }
 });
 
+// Delete student
 app.delete('/students/:id', async (req, res) => {
   try {
     await Student.findByIdAndDelete(req.params.id);
@@ -136,5 +118,5 @@ app.delete('/students/:id', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
