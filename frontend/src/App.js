@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams } 
 import axios from 'axios';
 import './App.css';
 
-const API = 'http://localhost:5000';
+const API = 'https://assignment-2-jfly.onrender.com';
 
 // Navbar Component
 const Navbar = () => {
